@@ -1,0 +1,46 @@
+[project]
+name = "density"
+version = "0.0.1"
+description = "RAG production-ready para busca e sumarização de documentos longos, com avaliação rigorosa integrada."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{ name = "Gilson" }]
+dependencies = [
+    "pydantic>=2.7",
+    "pydantic-settings>=2.3",
+    "typer>=0.12",
+    "rich>=13.7",
+    "psycopg[binary]>=3.2",
+]
+
+[project.scripts]
+density = "density.cli:main"
+
+# Dependências de desenvolvimento (PEP 735) — instaladas por `uv sync`, não vão no pacote.
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+# Com src-layout, o pacote publicável mora em src/density.
+[tool.hatch.build.targets.wheel]
+packages = ["src/density"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+# E/F = pyflakes+pycodestyle, I = isort, B = bugbear, UP = pyupgrade
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]   # permite `import density` nos testes sem instalar o pacote
+addopts = "-q"

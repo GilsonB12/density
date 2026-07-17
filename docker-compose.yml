@@ -1,0 +1,32 @@
+# Sobe um Postgres com a extensão pgvector já embutida na imagem oficial.
+# Objetivo da Etapa 0: ter o vector database rodando localmente, reprodutível,
+# sem instalar Postgres na máquina. Ver Vault: [[Docker e docker-compose]] e
+# [[Por que Postgres e pgvector]].
+
+services:
+  db:
+    image: pgvector/pgvector:pg17
+    container_name: density-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: density
+      POSTGRES_PASSWORD: density
+      POSTGRES_DB: density
+    ports:
+      # Host 5433 -> container 5432. Usamos 5433 no host para NÃO colidir com um
+      # Postgres já instalado na máquina (que costuma ocupar a 5432). Dentro do
+      # container o Postgres continua na 5432.
+      - "5433:5432"
+    volumes:
+      # Persiste os dados entre `up`/`down` (não some ao reiniciar o container).
+      - density-pgdata:/var/lib/postgresql/data
+      # Scripts em db/init rodam UMA vez, na primeira criação do banco.
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U density -d density"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  density-pgdata:

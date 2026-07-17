@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+
+# Ambiente / segredos
+.env
+
+# Dados de exemplo (não versionar corpora)
+/data/
+
+# Obsidian: config pessoal do app não vai pro repo; as NOTAS .md vão.
+Vault/.obsidian/
+Vault/99 - Assets/
+
+# SO / editores
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
